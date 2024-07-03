@@ -1,0 +1,70 @@
+body {
+  text-align: center;
+  background-color: #011F3F;
+  user-select: none;
+}
+
+@keyframes levels {
+  from{opacity: 0;}
+  to{opacity:1;}
+}
+
+#level-title {
+  font-family: 'Kanit';
+  font-weight: 350;
+  font-size: 5rem;
+  margin:  1%;
+  color: cornsilk;
+  background-color: black;
+  box-shadow: 0 0 20px black;
+}
+
+
+.container {
+  display: flex;
+  width: 50%;
+  margin: auto;
+  justify-content: center;
+
+}
+
+.btn {
+  cursor: pointer;
+  margin: 25px;
+  display: flex;
+  height: 200px;
+  width: 200px;
+  border: 10px solid black;
+  border-radius: 20%;
+  text-align: center;
+  font-size: 100px;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.pressed {
+  box-shadow: 0 0 20px white;
+  opacity: 0.5;
+}
+
+.flash {
+  background-color: #87c1ff;
+}
