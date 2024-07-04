@@ -1,22 +1,13 @@
+import {Dom} from "./dom.js"
 
-class Game {
+
+class Game extends Dom {
 
 computerSounds = [];
 playerSounds = [];
 isCorrect = false;
 level = null;
-
-buttons = document.querySelectorAll(".btn");
-body = document.querySelector("body");
-info = document.querySelector("#level-title");
-
-startText = 'Press <span style="font-style: oblique; font-weight: 450">Enter</span> to start';
-endText = `<span style="font-style: oblique; font-weight: 450">Wrong!</span> Try again`;
-listenText = `<span style="font-style: oblique; color: #87c1ff">... listen ...</span>`;
-
-levelText(level) {
-    return `<span style="font-weight: 450"> Level : ${level}</span>`;
-}
+gameStarted = false;
 
 buttonSounds = {
     "red": "./drums/red.mp3",
@@ -27,6 +18,7 @@ buttonSounds = {
 
 
 initializeGame() {
+    this.gameStarted = false;
     this.computerSounds = [];
     this.playerSounds = [];
     this.level = 1;
@@ -40,14 +32,15 @@ playSound(button) {
     audio.play();
 }
 
+
 nextSound() {
     var button = this.computerButton();
     this.pressButton(button);
-    console.log(this.level);
-    this.info.innerHTML = this.levelText(this.level);
-    this.info.style.color = "cornsilk";
+    let levelInfo = this.updateLevelInfo(this.level);
+    this.setInfo(levelInfo);
     this.addListeners();
 }
+
 
 computerButton() {
     var colors = Object.keys(this.buttonSounds);
@@ -57,6 +50,7 @@ computerButton() {
     this.computerSounds.push(newColor);
     return button;
 }
+    
 
 pressButton(button) {
         button.classList.add("pressed");
@@ -80,26 +74,25 @@ handleClick = (event) => {
                 this.removeListeners();
                 this.level++;
                 this.playerSounds = [];
-                console.log(this.level);
-                this.info.innerHTML = this.listenText;
+                this.setInfo(this.listenInfo);
                 setTimeout(() => {
                     this.nextSound();
-                }, 1000);
+                }, 1500);
             }
         }
         else {
-            this.info.innerHTML = this.endText;
-            this.info.style.color = "red";
+            this.setInfo(this.endInfo);
             var audioWrong = new Audio("./drums/wrong.mp3");
             audioWrong.play();
             this.removeListeners();
             setTimeout(() => {
-                this.info.innerHTML = this.startText;
-                this.info.style.color = "cornsilk";   
+                this.setInfo(this.startInfo);   
                 this.initializeGame();
             },1000);
+            
         }
     }
+
 
 addListeners() {
     this.buttons.forEach((button) => {
@@ -107,26 +100,25 @@ addListeners() {
     })
 }
 
+
 removeListeners() {
     this.buttons.forEach((button) => button.removeEventListener("click", this.handleClick));
 }
 
-removeEnterListener() {
-    document.removeEventListener("keypress", () => this.addEnterListener);
-}
 
 addEnterListener() {
     document.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !this.gameStarted) {
             this.initializeGame()
-            this.removeEnterListener();
-            this.info.innerHTML = this.listenText;
+            this.setInfo(this.listenInfo);
+            this.gameStarted = true;
             setTimeout(() => {
-                this.nextSound()
+                this.nextSound();
             }, 1000);
             } 
         })
-}
+    }
+    
 
 compareSound(i) {
     this.isCorrect= true;
@@ -145,10 +137,11 @@ compareSound(i) {
 
 }
 
+
 const game = new Game();
 window.onload = function() {
     game.addEnterListener();
-    game.info.innerHTML = game.startText
-    }
+    game.setInfo(game.startInfo);
+}
    
 
